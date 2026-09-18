@@ -1,0 +1,14 @@
+# Virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# OS-specific junk files
+.DS_Store
+Thumbs.db
+
+# Power BI temp/lock files
+*.pbix.lock
+~$*.pbix
