@@ -3,7 +3,11 @@ import sys
 
 steps = [
     "src/ingestion/load_trips.py",
-    "src/ingestion/load_to_sql.py",
+    "src/ingestion/build_dim_date.py",
+    "src/ingestion/build_dim_time.py",
+    "src/ingestion/build_dim_location.py",
+    "src/ingestion/build_dim_weather.py",
+    "src/ingestion/build_fact_trips.py",
     "src/ingestion/export_for_powerbi.py",
 ]
 
