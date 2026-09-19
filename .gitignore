@@ -12,3 +12,6 @@ Thumbs.db
 # Power BI temp/lock files
 *.pbix.lock
 ~$*.pbix
+
+# dbt logs
+logs/
