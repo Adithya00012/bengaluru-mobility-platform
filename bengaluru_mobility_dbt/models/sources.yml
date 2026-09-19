@@ -13,6 +13,11 @@ sources:
           - name: fare
             tests:
               - not_null
+      - name: fact_traffic
+        columns:
+          - name: congestion_index
+            tests:
+              - not_null
       - name: dim_date
       - name: dim_time
       - name: dim_location

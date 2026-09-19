@@ -1,0 +1,11 @@
+reading_time,zone_name,avg_speed_kmh,congestion_index
+2026-09-01 08:00:00,MG Road / Central,14.2,0.78
+2026-09-01 08:00:00,Indiranagar,18.5,0.55
+2026-09-01 08:00:00,Koramangala,12.1,0.85
+2026-09-01 09:00:00,MG Road / Central,16.0,0.65
+2026-09-01 09:00:00,Jayanagar,22.3,0.35
+2026-09-01 17:00:00,Indiranagar,10.8,0.90
+2026-09-01 17:00:00,Koramangala,15.5,0.70
+2026-09-01 18:00:00,MG Road / Central,13.0,0.80
+2026-09-02 08:00:00,Whitefield,20.1,0.45
+2026-09-02 19:00:00,Hebbal,17.8,0.58

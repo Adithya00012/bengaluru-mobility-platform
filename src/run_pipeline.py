@@ -8,6 +8,7 @@ steps = [
     "src/ingestion/build_dim_location.py",
     "src/ingestion/build_dim_weather.py",
     "src/ingestion/build_fact_trips.py",
+    "src/ingestion/build_fact_traffic.py",
     "src/ingestion/export_for_powerbi.py",
 ]
 
