@@ -1,0 +1,32 @@
+import pandas as pd
+import sqlite3
+
+conn = sqlite3.connect("data/processed/mobility.db")
+
+query = """
+SELECT
+    is_rain,
+    COUNT(*) AS trip_count,
+    ROUND(AVG(speed_kmh), 1) AS avg_speed_kmh,
+    ROUND(AVG(duration_min), 1) AS avg_duration_min
+FROM fact_trips_enriched
+GROUP BY is_rain
+"""
+weather_impact = pd.read_sql(query, conn)
+
+print("=== Trip performance: rain vs no rain ===")
+print(weather_impact)
+
+trips = pd.read_sql("SELECT * FROM fact_trips_enriched", conn)
+conn.close()
+
+correlation = trips["temperature_c"].corr(trips["speed_kmh"])
+print(f"\nCorrelation between temperature and speed: {correlation:.2f}")
+print("(Closer to 0 = no relationship, closer to +/-1 = strong relationship)")
+
+print("\n=== All trips with weather context, slowest first ===")
+print(
+    trips[
+        ["trip_id", "pickup_zone", "is_rain", "temperature_c", "speed_kmh"]
+    ].sort_values("speed_kmh")
+)
