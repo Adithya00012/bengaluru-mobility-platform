@@ -38,7 +38,7 @@ jobs:
         env:
           DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt
 
-            - name: Pipeline summary
+      - name: Pipeline summary
         if: always()
         run: |
           echo "## Pipeline Run Summary" >> $GITHUB_STEP_SUMMARY
