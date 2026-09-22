@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install pandas numpy dbt-core dbt-sqlite
+          pip install pandas numpy dbt-core==1.11.15 dbt-sqlite==1.10.0
 
       - name: Run the data pipeline
         run: python3 src/run_pipeline.py
