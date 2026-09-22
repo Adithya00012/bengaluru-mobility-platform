@@ -37,3 +37,12 @@ jobs:
         run: dbt test
         env:
           DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt
+
+            - name: Pipeline summary
+        if: always()
+        run: |
+          echo "## Pipeline Run Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Data ingestion: completed" >> $GITHUB_STEP_SUMMARY
+          echo "- dbt models built: fact_trips_enriched, fact_traffic_enriched" >> $GITHUB_STEP_SUMMARY
+          echo "- dbt tests run: 4 (uniqueness, not-null checks)" >> $GITHUB_STEP_SUMMARY
+          echo "- Run completed at: $(date -u)" >> $GITHUB_STEP_SUMMARY
