@@ -1,0 +1,39 @@
+name: Daily Mobility Pipeline
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  
+  workflow_dispatch:      
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: |
+          pip install pandas numpy dbt-core dbt-sqlite
+
+      - name: Run the data pipeline
+        run: python3 src/run_pipeline.py
+
+      - name: Run dbt models
+        working-directory: bengaluru_mobility_dbt
+        run: |
+          dbt run
+        env:
+          DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt
+
+      - name: Run dbt tests
+        working-directory: bengaluru_mobility_dbt
+        run: dbt test
+        env:
+          DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt
