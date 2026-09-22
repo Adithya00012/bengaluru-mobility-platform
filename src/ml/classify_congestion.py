@@ -19,6 +19,8 @@ df["is_weekend"] = df["is_weekend"].astype(int)
 df["is_peak_hour"] = df["is_peak_hour"].astype(int)
 
 feature_cols = ["hour", "is_weekend", "is_peak_hour"]
+df = pd.get_dummies(df, columns=["zone_name"], drop_first=True)
+feature_cols += [col for col in df.columns if col.startswith("zone_name_")]
 X = df[feature_cols]
 y = df["high_congestion"]
 
@@ -29,13 +31,20 @@ X_train, X_test, y_train, y_test = train_test_split(
 print(f"\nTraining set: {len(X_train)} readings")
 print(f"Test set: {len(X_test)} readings")
 
-model = DecisionTreeClassifier(max_depth=2, random_state=42)
+model = DecisionTreeClassifier(max_depth=5, random_state=42)
 model.fit(X_train, y_train)
 
 predictions = model.predict(X_test)
 accuracy = accuracy_score(y_test, predictions)
 
+# Baseline: what if we always predicted the majority class?
+baseline_accuracy = max(y_test.mean(), 1 - y_test.mean())
+
 print(f"\n=== Model Performance ===")
-print(f"Accuracy: {accuracy:.0%}")
+print(f"Model accuracy: {accuracy:.1%}")
+print(f"Baseline accuracy (always guess majority class): {baseline_accuracy:.1%}")
+print(
+    f"Improvement over baseline: {(accuracy - baseline_accuracy)*100:+.1f} percentage points"
+)
 print("\nActual vs Predicted:")
 print(pd.DataFrame({"actual": y_test.values, "predicted": predictions}))
