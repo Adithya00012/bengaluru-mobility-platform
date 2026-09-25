@@ -1,0 +1,9 @@
+pandas
+numpy
+geopandas
+folium
+scikit-learn
+google-genai
+python-dotenv
+dbt-core==1.11.15
+dbt-sqlite==1.10.0
