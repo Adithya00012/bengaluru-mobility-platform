@@ -3,6 +3,8 @@ select
     dt.full_date,
     dt.day_of_week,
     dt.is_weekend,
+    dt.is_holiday,
+    dt.holiday_name,
     tm.hour,
     tm.period_of_day,
     tm.is_peak_hour,
