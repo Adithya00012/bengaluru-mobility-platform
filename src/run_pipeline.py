@@ -10,6 +10,7 @@ steps = [
     "src/ingestion/build_fact_trips.py",
     "src/ingestion/build_fact_traffic.py",
     "src/ingestion/export_for_powerbi.py",
+    "src/ingestion/export_traffic_for_powerbi.py",
 ]
 
 print("=== Starting Bengaluru Mobility Pipeline ===\n")
