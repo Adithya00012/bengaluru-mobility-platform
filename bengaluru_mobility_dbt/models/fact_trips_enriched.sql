@@ -9,6 +9,7 @@ select
     tm.period_of_day,
     tm.is_peak_hour,
     loc.zone_name as pickup_zone,
+    loc_dropoff.zone_name as dropoff_zone,
     w.is_rain,
     w.temperature_c,
     f.distance_km,
@@ -20,4 +21,5 @@ from {{ source('mobility_raw', 'fact_trips') }} f
 join {{ source('mobility_raw', 'dim_date') }} dt on f.date_id = dt.date_id
 join {{ source('mobility_raw', 'dim_time') }} tm on f.time_id = tm.time_id
 join {{ source('mobility_raw', 'dim_location') }} loc on f.pickup_zone_id = loc.zone_id
+join {{ source('mobility_raw', 'dim_location') }} loc_dropoff on f.dropoff_zone_id = loc_dropoff.zone_id
 join {{ source('mobility_raw', 'dim_weather') }} w on f.date_id = w.date_id

@@ -30,3 +30,21 @@ print(
         ["trip_id", "pickup_zone", "is_rain", "temperature_c", "speed_kmh"]
     ].sort_values("speed_kmh")
 )
+
+# --- Holiday impact analysis ---
+conn = sqlite3.connect("data/processed/mobility.db")
+holiday_query = """
+SELECT
+    is_holiday,
+    COUNT(*) AS trip_count,
+    ROUND(AVG(speed_kmh), 1) AS avg_speed_kmh,
+    ROUND(AVG(duration_min), 1) AS avg_duration_min,
+    ROUND(AVG(fare), 0) AS avg_fare
+FROM fact_trips_enriched
+GROUP BY is_holiday
+"""
+holiday_impact = pd.read_sql(holiday_query, conn)
+conn.close()
+
+print("\n\n=== Trip performance: holiday vs non-holiday ===")
+print(holiday_impact)

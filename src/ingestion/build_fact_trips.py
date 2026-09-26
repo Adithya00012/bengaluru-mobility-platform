@@ -19,6 +19,10 @@ trips["pickup_zone_id"] = trips.apply(
     lambda row: find_nearest_zone(row["pickup_lat"], row["pickup_lon"], dim_location),
     axis=1,
 )
+trips["dropoff_zone_id"] = trips.apply(
+    lambda row: find_nearest_zone(row["dropoff_lat"], row["dropoff_lon"], dim_location),
+    axis=1,
+)
 
 trips["pickup_time"] = pd.to_datetime(trips["pickup_time"])
 trips["dropoff_time"] = pd.to_datetime(trips["dropoff_time"])
@@ -34,6 +38,7 @@ fact_trips = trips[
         "date_id",
         "time_id",
         "pickup_zone_id",
+        "dropoff_zone_id",
         "distance_km",
         "duration_min",
         "speed_kmh",
