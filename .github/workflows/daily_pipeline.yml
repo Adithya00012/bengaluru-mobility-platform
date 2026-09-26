@@ -38,6 +38,15 @@ jobs:
         env:
           DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt
 
+            - name: Generate mobility report
+        run: python3 src/generate_report.py
+
+      - name: Upload report as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobility-report
+          path: reports/
+
       - name: Pipeline summary
         if: always()
         run: |
