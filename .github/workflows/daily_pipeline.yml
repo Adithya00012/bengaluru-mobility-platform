@@ -2,7 +2,8 @@ name: Daily Mobility Pipeline
 
 on:
   schedule:
-    - cron: '0 3 * * *'  
+    - cron: '0 3 * * *'     
+    - cron: '0 4 * * 1'      
   workflow_dispatch:      
 
 jobs:
@@ -38,8 +39,17 @@ jobs:
         env:
           DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt
 
-            - name: Generate mobility report
-        run: python3 src/generate_report.py
+            - name: Determine report type
+        id: report_type
+        run: |
+          if [ "$(date -u +%u)" = "1" ] && [ "$(date -u +%H)" = "04" ]; then
+            echo "type=weekly" >> $GITHUB_OUTPUT
+          else
+            echo "type=daily" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate mobility report
+        run: python3 src/generate_report.py ${{ steps.report_type.outputs.type }}
 
       - name: Upload report as workflow artifact
         uses: actions/upload-artifact@v4

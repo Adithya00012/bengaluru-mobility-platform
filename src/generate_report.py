@@ -50,7 +50,11 @@ conn.close()
 
 report_date = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
 
-report = f"""# Bengaluru Mobility Report
+import sys
+
+report_type = sys.argv[1] if len(sys.argv) > 1 else "daily"
+
+report = f"""# Bengaluru Mobility Report ({report_type.title()})
 Generated: {report_date}
 
 ## Key Metrics
@@ -70,7 +74,9 @@ for _, row in worst_routes.iterrows():
 
 report += f"\n## Alerts\n- {alert_count} traffic readings exceeded the 0.75 congestion threshold\n"
 
-filename = f"reports/mobility_report_{datetime.now().strftime('%Y%m%d_%H%M')}.md"
+filename = (
+    f"reports/mobility_report_{report_type}_{datetime.now().strftime('%Y%m%d_%H%M')}.md"
+)
 import os
 
 os.makedirs("reports", exist_ok=True)
