@@ -48,3 +48,19 @@ conn.close()
 
 print("\n\n=== Trip performance: holiday vs non-holiday ===")
 print(holiday_impact)
+
+conn = sqlite3.connect("data/processed/mobility.db")
+export_df = pd.read_sql(
+    """
+SELECT
+    is_rain, is_holiday,
+    speed_kmh, duration_min, fare, full_date, pickup_zone
+FROM fact_trips_enriched
+""",
+    conn,
+)
+conn.close()
+export_df.to_csv("data/processed/weather_holiday_for_powerbi.csv", index=False)
+print(
+    f"\nExported {len(export_df)} rows to data/processed/weather_holiday_for_powerbi.csv"
+)

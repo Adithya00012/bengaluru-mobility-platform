@@ -22,3 +22,4 @@ sources:
       - name: dim_time
       - name: dim_location
       - name: dim_weather
+      - name: dim_events
