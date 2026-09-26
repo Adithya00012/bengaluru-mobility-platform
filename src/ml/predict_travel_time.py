@@ -49,3 +49,14 @@ print("\n=== Model coefficients (feature importance) ===")
 for feature, coef in zip(feature_cols, model.coef_):
     print(f"{feature}: {coef:.2f}")
 print(f"Baseline (intercept): {model.intercept_:.2f}")
+
+export_df = X_test.copy()
+export_df["actual_duration"] = y_test.values
+export_df["predicted_duration"] = predictions.round(1)
+export_df["prediction_error"] = (
+    export_df["actual_duration"] - export_df["predicted_duration"]
+).round(1)
+export_df.to_csv("data/processed/travel_time_predictions.csv", index=False)
+print(
+    f"\nExported {len(export_df)} predictions to data/processed/travel_time_predictions.csv"
+)

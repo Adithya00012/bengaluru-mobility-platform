@@ -26,3 +26,6 @@ print(routes.head(5))
 
 print(f"\n=== Fastest routes ===")
 print(routes.tail(5))
+
+routes.to_csv("data/processed/route_analysis.csv", index=False)
+print("\nExported to data/processed/route_analysis.csv")

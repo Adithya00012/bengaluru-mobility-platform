@@ -1,0 +1,57 @@
+pickup_zone,dropoff_zone,trip_count,avg_speed_kmh,avg_duration_min
+Koramangala,Jayanagar,4,15.9,9.4
+Indiranagar,Electronic City,5,16.1,60.7
+Whitefield,Koramangala,3,16.1,52.6
+Jayanagar,Indiranagar,8,16.7,31.2
+Koramangala,HSR Layout,6,16.7,13.8
+Hebbal,Koramangala,6,16.9,36.4
+Electronic City,Koramangala,15,17.1,39.9
+Whitefield,Jayanagar,9,17.8,58.9
+Koramangala,MG Road / Central,6,17.9,16.4
+Electronic City,Whitefield,9,18.3,57.9
+Indiranagar,Jayanagar,7,18.3,28.1
+MG Road / Central,Jayanagar,9,18.4,23.4
+HSR Layout,MG Road / Central,8,18.5,30.2
+Indiranagar,Whitefield,12,18.8,40.7
+Indiranagar,HSR Layout,12,19.1,26.8
+Electronic City,MG Road / Central,12,19.2,54.7
+HSR Layout,Koramangala,5,19.2,17.1
+HSR Layout,Whitefield,13,19.2,43.9
+Indiranagar,Hebbal,12,19.2,31.1
+Koramangala,Electronic City,9,19.6,35.8
+Koramangala,Indiranagar,7,19.9,18.8
+Whitefield,Hebbal,7,19.9,71.0
+Whitefield,MG Road / Central,12,19.9,57.7
+Jayanagar,Koramangala,9,20.0,8.6
+MG Road / Central,Electronic City,9,20.0,49.4
+Koramangala,Whitefield,8,20.2,48.4
+MG Road / Central,Koramangala,8,20.2,15.4
+MG Road / Central,Hebbal,10,20.3,15.2
+Electronic City,HSR Layout,9,20.6,24.0
+Indiranagar,Koramangala,7,20.6,19.4
+Jayanagar,HSR Layout,7,20.6,13.8
+MG Road / Central,Indiranagar,6,20.6,17.6
+Electronic City,Indiranagar,9,20.7,47.9
+Whitefield,Indiranagar,14,20.8,37.7
+Hebbal,Electronic City,15,21.0,66.2
+Hebbal,MG Road / Central,13,21.1,15.6
+HSR Layout,Hebbal,12,21.2,41.8
+Hebbal,Indiranagar,12,21.2,28.2
+MG Road / Central,HSR Layout,8,21.5,27.5
+Indiranagar,MG Road / Central,6,21.6,13.3
+Whitefield,Electronic City,6,21.6,50.3
+Jayanagar,Electronic City,8,21.8,28.4
+Electronic City,Jayanagar,11,21.9,28.8
+Koramangala,Hebbal,7,22.0,29.8
+Jayanagar,Whitefield,6,22.1,47.4
+Whitefield,HSR Layout,7,22.1,37.1
+Hebbal,HSR Layout,9,22.3,41.3
+HSR Layout,Electronic City,6,22.4,21.5
+Hebbal,Whitefield,10,23.0,59.0
+Jayanagar,MG Road / Central,8,23.1,19.3
+Jayanagar,Hebbal,7,23.7,29.9
+Hebbal,Jayanagar,5,24.1,31.4
+HSR Layout,Jayanagar,11,24.6,12.3
+Electronic City,Hebbal,6,24.9,56.7
+MG Road / Central,Whitefield,8,25.3,42.9
+HSR Layout,Indiranagar,4,25.6,20.3
