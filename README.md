@@ -1,45 +1,56 @@
 # Bengaluru Mobility Intelligence Platform
 
-An end-to-end urban mobility analytics platform for Bengaluru, built to demonstrate the full data lifecycle: ingestion, dimensional modeling, transformation, geospatial analysis, machine learning, natural language querying, and automated deployment.
+An end-to-end urban mobility analytics platform for Bengaluru, covering data ingestion, dimensional modeling, transformation, geospatial analysis, machine learning, natural language querying, cloud data warehousing, and automated deployment.
 
 ## Architecture
 Synthetic/Raw Data → Python Ingestion → SQLite → dbt (star schema) →
-├── Power BI Dashboard
+├── Power BI Dashboard (3 pages: Trips, Congestion, Predictions & Routes)
 ├── GeoPandas/Folium Geospatial Analysis
-├── scikit-learn ML Models (travel-time prediction, congestion classification)
-└── Gemini-powered Natural Language Q&A (RAG)
+├── scikit-learn ML Models (travel-time prediction, congestion classification, anomaly detection)
+├── Gemini-powered Natural Language Q&A (RAG)
+├── Google BigQuery (cloud data warehouse, synced daily)
+└── Excel export (stakeholder-friendly scenario analysis)
 
-Entire pipeline automated via GitHub Actions (daily) and containerized with Docker.
+Entire pipeline automated via GitHub Actions (daily + weekly), containerized with Docker (full parity with CI, including dbt).
 
+
+See `docs/architecture.md` for a full diagram and `docs/schema.md` for the entity-relationship model.
 
 ## What's built
 
-**Data Engineering:** Star schema with `dim_date`, `dim_time`, `dim_location`, `dim_weather`, `fact_trips`, `fact_traffic`, managed with dbt (models, automated tests, auto-generated documentation).
+**Data Engineering:** Star schema — `dim_date` (with real 2026 Karnataka holidays), `dim_time`, `dim_location`, `dim_weather`, `dim_events`, `fact_trips` (with pickup **and** dropoff zones), `fact_traffic` — managed with dbt (models, automated tests, auto-generated documentation). Cleaning handles invalid durations, missing data, duplicate records, and missing coordinates.
 
-**Analytics & Geospatial:** Interactive zone-demand mapping, real inter-zone distance calculations (Haversine + UTM projection), congestion ranking, delayed-trip detection, weather impact analysis.
+**Analytics & Geospatial:** Interactive zone-demand mapping, real inter-zone distance calculations (Haversine + UTM projection), congestion ranking, route-level (origin-destination) delay analysis, weather and holiday impact analysis, event-impact analysis, threshold-based congestion alerts, and time-window/route recommendations.
 
-**Machine Learning:** Linear regression for travel-time prediction (R² 0.82 on 480 synthetic trips) and decision tree classification for congestion prediction (86% accuracy, 9.3pp above baseline on 3,840 synthetic traffic readings). See [A note on data volume](#a-note-on-data-volume-and-model-performance) below.
+**Machine Learning:** Linear regression for travel-time prediction (R² 0.82 on 480 synthetic trips), decision tree classification for congestion prediction (86% accuracy, 9.3pp above baseline on 3,840 synthetic traffic readings), and z-score based anomaly detection for trip volume and congestion spikes. See `docs/ml_experiment_notes.md` for the full experimental history.
 
-**Natural Language Intelligence (RAG):** A text-to-SQL pipeline using Google's Gemini API — converts plain-English questions into real SQL queries, runs them against the actual database, and returns grounded, natural-language answers.
+**Natural Language Intelligence (RAG):** A text-to-SQL pipeline using Google's Gemini API — see `docs/api_documentation.md` for integration details.
 
-**Automation & Monitoring:** GitHub Actions workflow runs the full pipeline and dbt tests daily, with automatic failure notifications and a run summary.
+**Automation & Monitoring:** GitHub Actions runs the full pipeline daily (and a weekly-labeled report every Monday), including dbt tests, automated report generation (Markdown + Excel), and a daily sync to BigQuery — all authenticated via a scoped service account stored in GitHub Secrets, with automatic failure notifications.
 
-**Deployment:** Fully containerized with Docker for portable, reproducible execution.
+**Cloud Data Warehouse:** The full star schema is deployed to Google BigQuery (free sandbox tier), kept in sync automatically by the daily pipeline. A second, isolated dbt project (`bengaluru_mobility_dbt_bigquery/`) runs the same enrichment model directly against BigQuery.
+
+**Deployment:** Fully containerized with Docker — the container runs the complete pipeline including dbt build and test, matching what GitHub Actions runs.
 
 ## Project structure
-
 bengaluru-mobility-platform/
 ├── data/
-│ ├── raw/ # Source CSVs (including synthetic data generators' output)
-│ └── processed/ # Cleaned data, SQLite database
+│ ├── raw/ # Source CSVs + synthetic data generators' output
+│ └── processed/ # Cleaned data, SQLite database, Power BI exports
 ├── src/
-│ ├── ingestion/ # Data loading, cleaning, dimension/fact table builders
-│ ├── analysis/ # Geospatial and congestion analysis scripts
-│ ├── ml/ # Machine learning models
+│ ├── ingestion/ # Loading, cleaning, dimension/fact table builders
+│ ├── analysis/ # Geospatial, congestion, route, event, recommendation scripts
+│ ├── ml/ # ML models + anomaly detection
 │ ├── rag/ # Natural language Q&A (Gemini)
-│ └── run_pipeline.py # Orchestrates the full pipeline
-├── bengaluru_mobility_dbt/ # dbt project (models, tests, docs)
+│ ├── run_pipeline.py # Orchestrates the Python ingestion pipeline
+│ ├── generate_report.py # Daily/weekly Markdown report generator
+│ ├── export_to_excel.py # Stakeholder-friendly Excel export
+│ └── load_to_bigquery.py # Syncs the star schema to BigQuery
+├── bengaluru_mobility_dbt/ # dbt project (SQLite target)
+├── bengaluru_mobility_dbt_bigquery/ # dbt project (BigQuery target)
 ├── dashboards/ # Power BI dashboard, exported geospatial maps
+├── docs/ # Data dictionary, schema, architecture, troubleshooting, API docs, ML notes
+├── reports/ # Generated Markdown + Excel reports
 ├── .github/workflows/ # GitHub Actions automation
 ├── Dockerfile
 └── requirements.txt
@@ -56,34 +67,35 @@ python3 src/run_pipeline.py
 cd bengaluru_mobility_dbt && dbt run && dbt test
 ```
 
-**With Docker:**
+**With Docker** (runs the full pipeline including dbt):
 ```bash
 docker build -t bengaluru-mobility-platform .
 docker run --rm bengaluru-mobility-platform
 ```
 
-**Natural language queries** (requires a free Gemini API key in a `.env` file — see `GEMINI_API_KEY` in `src/rag/ask_mobility_data.py`):
+**Natural language queries** (requires a free Gemini API key in `.env` — see `docs/api_documentation.md`):
 ```bash
 python3 src/rag/ask_mobility_data.py
 ```
 
+**BigQuery sync** (requires `gcloud auth application-default login` locally, or `GCP_SA_KEY` in CI):
+```bash
+python3 src/load_to_bigquery.py
+```
+
+## Documentation
+
+- `docs/data_dictionary.md` — column-level detail for every table
+- `docs/schema.md` — entity-relationship diagram
+- `docs/architecture.md` — system architecture diagram
+- `docs/api_documentation.md` — Gemini API integration details
+- `docs/troubleshooting.md` — real issues encountered and their fixes
+- `docs/ml_experiment_notes.md` — full ML experimentation history
+
 ## A note on data volume and model performance
 
-The project started with a small, hand-crafted sample dataset (30 trips, 10 traffic readings) to make every pipeline step fast to run and inspect. At that scale, the Phase 4 ML models performed poorly (negative R² for travel-time regression, near-baseline accuracy for congestion classification) — a genuine, correctly-diagnosed data volume limitation, not a flaw in the modeling approach.
-
-The dataset was then expanded using a realistic synthetic data generator (`src/ingestion/generate_synthetic_trips.py`, `generate_synthetic_traffic.py`) — 480 trips and 3,840 traffic readings across 30 days, with genuine peak-hour and zone-level patterns built in. With this larger dataset, using the exact same pipeline and modeling code:
-
-- **Travel-time regression:** R² improved from -0.72 to **0.82**, with mean absolute error down to 5.8 minutes.
-- **Congestion classification:** accuracy improved from 33% (worse than baseline) to **86%**, a 9.3 percentage-point improvement over the majority-class baseline.
-
-This progression is intentionally documented as evidence the underlying methodology was sound throughout — the models only needed real data volume, not different code.
-
-## Cloud Data Warehouse (BigQuery)
-
-The full star schema is also deployed to Google BigQuery (`src/load_to_bigquery.py`), using BigQuery's free sandbox tier (no billing required). A second, isolated dbt project (`bengaluru_mobility_dbt_bigquery/`) runs the same enrichment model directly against BigQuery, demonstrating dbt's warehouse-agnostic design — the model SQL is nearly identical to the SQLite version, differing mainly in connection configuration, not transformation logic.
-
-A separate Python virtual environment (`venv_bigquery/`) is used for this work, since `dbt-bigquery` and `dbt-sqlite` have incompatible dependency requirements.
+The project started with a small, hand-crafted sample dataset (30 trips, 10 traffic readings). At that scale, the ML models performed poorly (negative R², near-baseline classification accuracy) — a genuine, correctly-diagnosed data volume limitation. The dataset was expanded using realistic synthetic data generators (480 trips, 3,840 traffic readings across 30 days, with real peak-hour and zone-level patterns built in). With the same modeling code, R² improved to 0.82 and classification accuracy to 86% — evidence the methodology was sound throughout; the models only needed real data volume.
 
 ## Tech stack
 
-Python (pandas, GeoPandas, Folium, scikit-learn, google-genai), SQL, SQLite, dbt, Power BI, Docker, GitHub Actions, Git.
+Python (pandas, GeoPandas, Folium, scikit-learn, google-genai, google-cloud-bigquery), SQL, SQLite, BigQuery, dbt, Power BI, Excel, Docker, GitHub Actions, Git.
