@@ -3,6 +3,7 @@
 An end-to-end urban mobility analytics platform for Bengaluru, covering data ingestion, dimensional modeling, transformation, geospatial analysis, machine learning, natural language querying, cloud data warehousing, and automated deployment.
 
 ## Architecture
+```text
 Synthetic/Raw Data → Python Ingestion → SQLite → dbt (star schema) →
 ├── Power BI Dashboard (3 pages: Trips, Congestion, Predictions & Routes)
 ├── GeoPandas/Folium Geospatial Analysis
@@ -10,7 +11,7 @@ Synthetic/Raw Data → Python Ingestion → SQLite → dbt (star schema) →
 ├── Gemini-powered Natural Language Q&A (RAG)
 ├── Google BigQuery (cloud data warehouse, synced daily)
 └── Excel export (stakeholder-friendly scenario analysis)
-
+```
 Entire pipeline automated via GitHub Actions (daily + weekly), containerized with Docker (full parity with CI, including dbt).
 
 
