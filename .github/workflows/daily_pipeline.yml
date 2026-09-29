@@ -41,7 +41,7 @@ jobs:
           DBT_PROFILES_DIR: ${{ github.workspace }}/.dbt
           DBT_ROOT: ${{ github.workspace }}
 
-            - name: Determine report type
+      - name: Determine report type
         id: report_type
         run: |
           if [ "$(date -u +%u)" = "1" ] && [ "$(date -u +%H)" = "04" ]; then
