@@ -33,6 +33,7 @@ See `docs/architecture.md` for a full diagram and `docs/schema.md` for the entit
 **Deployment:** Fully containerized with Docker — the container runs the complete pipeline including dbt build and test, matching what GitHub Actions runs.
 
 ## Project structure
+```text
 bengaluru-mobility-platform/
 ├── data/
 │ ├── raw/ # Source CSVs + synthetic data generators' output
@@ -54,7 +55,7 @@ bengaluru-mobility-platform/
 ├── .github/workflows/ # GitHub Actions automation
 ├── Dockerfile
 └── requirements.txt
-
+```
 
 ## Running this project
 
