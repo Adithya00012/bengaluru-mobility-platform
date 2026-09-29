@@ -78,6 +78,12 @@ The dataset was then expanded using a realistic synthetic data generator (`src/i
 
 This progression is intentionally documented as evidence the underlying methodology was sound throughout — the models only needed real data volume, not different code.
 
+## Cloud Data Warehouse (BigQuery)
+
+The full star schema is also deployed to Google BigQuery (`src/load_to_bigquery.py`), using BigQuery's free sandbox tier (no billing required). A second, isolated dbt project (`bengaluru_mobility_dbt_bigquery/`) runs the same enrichment model directly against BigQuery, demonstrating dbt's warehouse-agnostic design — the model SQL is nearly identical to the SQLite version, differing mainly in connection configuration, not transformation logic.
+
+A separate Python virtual environment (`venv_bigquery/`) is used for this work, since `dbt-bigquery` and `dbt-sqlite` have incompatible dependency requirements.
+
 ## Tech stack
 
 Python (pandas, GeoPandas, Folium, scikit-learn, google-genai), SQL, SQLite, dbt, Power BI, Docker, GitHub Actions, Git.

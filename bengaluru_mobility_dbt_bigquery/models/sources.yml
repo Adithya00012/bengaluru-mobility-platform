@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: mobility_raw
+    schema: mobility_data
+    tables:
+      - name: fact_trips
+      - name: fact_traffic
+      - name: dim_date
+      - name: dim_time
+      - name: dim_location
+      - name: dim_weather
+      - name: dim_events

@@ -17,3 +17,4 @@ Thumbs.db
 logs/
 
 .env
+venv_bigquery/
